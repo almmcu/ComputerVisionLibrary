@@ -24,7 +24,7 @@ public class BMPHistogram implements BMPImageOperations{
         return histogramList;
     }
 
-    public List operate() throws IOException {
+    public List operate(int dimension) throws IOException {
 
         for (int i = 0; i < this.histogramList.length; i++) {
             this.histogramList[i] = 0;

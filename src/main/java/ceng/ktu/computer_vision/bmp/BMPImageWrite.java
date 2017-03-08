@@ -1,5 +1,8 @@
 package ceng.ktu.computer_vision.bmp;
 
+import ceng.ktu.computer_vision.kmeans.kmeans3d.Cluster3D;
+import ceng.ktu.computer_vision.kmeans.kmeans3d.Point3D;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,11 +18,17 @@ import java.util.List;
  */
 public class BMPImageWrite implements BMPImageOperations {
 
-    private static final int [] COLOR_LIST = {16777215,0, 16711680, 65280, 255};
+    // white: 16777215
+    // black: 0
+    // red: 16711680
+    // green: 65280
+    // blue: 255
+    private static final int [] COLOR_LIST = {255, 16711680, 65280, 255, 16777215, 0};
     private int width;
     private int heigth;
     private List<Integer> intensityList;
     private int threshold;
+    List<Cluster3D> clusters;
 
     public BMPImageWrite(int width, int heigth, List<Integer> intensityList, int threshold) {
         this.width = width;
@@ -27,28 +36,43 @@ public class BMPImageWrite implements BMPImageOperations {
         this.intensityList = intensityList;
         this.threshold = threshold;
     }
+    public BMPImageWrite(int width, int heigth, List<Cluster3D> clusters) {
+        this.width = width;
+        this.heigth = heigth;
+        this.clusters = clusters;
+    }
 
-    public List operate() throws IOException {
+    public List operate(int dimension) throws IOException {
 
         // k means den gelen eşik değerine göre resim yeniden oluşturulacak.
         // resim oluşturulurken COLOR_LIST elemanları kullanılacak.
         BufferedImage bufferedImage = null;
         bufferedImage = new BufferedImage(width, heigth, BufferedImage.TYPE_INT_RGB);
         try {
+        if (dimension == 0)
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < heigth; j++) {
+                    if (intensityList.get(i*width+j) < threshold)
+                        bufferedImage.setRGB(i, j, COLOR_LIST[2]);// col = COLOR List elements
+                    else
+                        bufferedImage.setRGB(i, j, COLOR_LIST[3]);// col = COLOR List elements
 
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < heigth; j++) {
-                if (intensityList.get(i*width+j) < threshold)
-                    bufferedImage.setRGB(i, j, COLOR_LIST[2]);// col = COLOR List elements
-                else
-                    bufferedImage.setRGB(i, j, COLOR_LIST[3]);// col = COLOR List elements
-
+                }
             }
-        }
+        if (dimension == 3)
+            for(Cluster3D cluster : clusters) {
+                for (Point3D point :
+                        cluster.getClusterPoints()) {
+                    bufferedImage.setRGB(
+                            point.getX(),
+                            point.getY(),
+                            COLOR_LIST[point.getClusterNumber()]);// col = COLOR List elements
+                }
+            }
         }catch (Exception e){
             System.out.println("Exceptin catched " + e.toString());
         }
-        File f = new File("f_color.bmp");
+        File f = new File("f_color4.bmp");
         ImageIO.write(bufferedImage, "BMP", f);
 
         return null;

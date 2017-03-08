@@ -1,5 +1,7 @@
 package ceng.ktu.computer_vision.bmp;
 
+import ceng.ktu.computer_vision.kmeans.kmeans3d.Point3D;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -19,6 +21,7 @@ public class ReadBMPImage implements BMPImageOperations{
     private String bmpImagePath;
     private List rgbList;
     private List intensityList;
+    private List<Point3D> pixelList;
 
     public ReadBMPImage(String bmpImagePath) {
         this.bmpImagePath = bmpImagePath;
@@ -32,10 +35,11 @@ public class ReadBMPImage implements BMPImageOperations{
         return intensityList;
     }
 
-    public List operate() throws IOException {
+    public List operate(int dimension) throws IOException {
        File myImg = new File(this.bmpImagePath);
        BufferedImage in = ImageIO.read(myImg);
-        rgbList = new ArrayList<Integer>();
+        pixelList =  new ArrayList<Point3D>();
+        rgbList =  new ArrayList<Integer>();
         intensityList = new ArrayList<Integer>();
        // BufferedImage newImage = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
         //int[][] array2D = new int[in.getWidth()][in.getHeight()];
@@ -55,6 +59,10 @@ public class ReadBMPImage implements BMPImageOperations{
                 red = (color >> 16 ) & 0x000000FF;
                 green = (color >> 8 ) & 0x000000FF;
                 blue = (color) & 0x000000FF;
+                Point3D point =  new Point3D(red, green, blue);
+                point.setX(xPixel);
+                point.setY(yPixel);
+                pixelList.add(point);
                 rgbList.add(red);
                 rgbList.add(green);
                 rgbList.add(blue);
@@ -66,6 +74,8 @@ public class ReadBMPImage implements BMPImageOperations{
                 intensityList.add(intensity);
             }
         }
+
+        if (dimension == 3) return pixelList;
         return intensityList;
     }// operate
 

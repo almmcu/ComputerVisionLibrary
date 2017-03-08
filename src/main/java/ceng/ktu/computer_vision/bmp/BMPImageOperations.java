@@ -11,6 +11,6 @@ import java.util.List;
  * @since 01.03.2017.
  */
 public interface BMPImageOperations {
-    List operate() throws IOException;
+    List operate(int dimension) throws IOException;
 
 }

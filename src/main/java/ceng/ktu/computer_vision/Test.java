@@ -34,6 +34,7 @@ public class Test {
         // red: 16711680
         // green: 65280
         // blue: 255
+        int dimension = 0;
 
         try {
             // reading image
@@ -41,16 +42,15 @@ public class Test {
                     absolutePath.concat("\\Pictures\\f.bmp")
             );
             // image histogram
-            List intensityList = bmpImageOperations.operate();
+            List pixelList = bmpImageOperations.operate(dimension);
+
             bmpImageOperations = new BMPHistogram(
-                    intensityList
+                    pixelList
             );
 
             // histogram k mean for finding threshold
-
-            KMeans kMeans =  new KMeans(bmpImageOperations.operate(), 2);
+            KMeans kMeans =  new KMeans(bmpImageOperations.operate(0), 2);
             kMeans.calculate();
-            System.out.println(kMeans.getClusterList());
 
             // get threshold
             int index = ( kMeans.getClusterList().get(0).getClusterCenter() +
@@ -59,13 +59,14 @@ public class Test {
 
             // write image
 
-            bmpImageOperations = new BMPImageWrite(512, 512, intensityList,threshold);
-            bmpImageOperations.operate();
+            bmpImageOperations = new BMPImageWrite(512, 512, pixelList,threshold);
+            bmpImageOperations.operate(0);
 
         } catch (IOException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        e.printStackTrace();
+    }catch (Exception e) {
+        e.printStackTrace();
+    }
+
     }
 }
