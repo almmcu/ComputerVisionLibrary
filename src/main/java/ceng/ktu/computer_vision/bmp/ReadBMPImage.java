@@ -22,7 +22,7 @@ public class ReadBMPImage implements BMPImageOperations{
     private List rgbList;
     private List intensityList;
     private List<Point3D> pixelList;
-
+    public static int imageWidth, imageHeight;
     public ReadBMPImage(String bmpImagePath) {
         this.bmpImagePath = bmpImagePath;
     }
@@ -46,6 +46,8 @@ public class ReadBMPImage implements BMPImageOperations{
         byte[] pixels;
         pixels = ((DataBufferByte) in.getRaster().getDataBuffer()).getData();
 
+        imageHeight = in.getHeight();
+        imageWidth = in.getWidth();
         int red;
         int green;
         int blue;

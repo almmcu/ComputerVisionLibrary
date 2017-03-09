@@ -23,23 +23,26 @@ public class BMPImageWrite implements BMPImageOperations {
     // red: 16711680
     // green: 65280
     // blue: 255
-    private static final int [] COLOR_LIST = {255, 16711680, 65280, 255, 16777215, 0};
+    private static final int [] COLOR_LIST = {16777215, 16711680, 65280, 255, 65535, 16711935, 16776960, 0, 16777215};
     private int width;
     private int heigth;
     private List<Integer> intensityList;
     private int threshold;
-    List<Cluster3D> clusters;
+    private List<Cluster3D> clusters;
+    private String outputImagePath;
 
-    public BMPImageWrite(int width, int heigth, List<Integer> intensityList, int threshold) {
+    public BMPImageWrite(int width, int heigth, List<Integer> intensityList, int threshold, String outputImagePath) {
         this.width = width;
         this.heigth = heigth;
         this.intensityList = intensityList;
         this.threshold = threshold;
+        this.outputImagePath = outputImagePath;
     }
-    public BMPImageWrite(int width, int heigth, List<Cluster3D> clusters) {
+    public BMPImageWrite(int width, int heigth, List<Cluster3D> clusters, String outputImagePath) {
         this.width = width;
         this.heigth = heigth;
         this.clusters = clusters;
+        this.outputImagePath = outputImagePath;
     }
 
     public List operate(int dimension) throws IOException {
@@ -53,9 +56,9 @@ public class BMPImageWrite implements BMPImageOperations {
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < heigth; j++) {
                     if (intensityList.get(i*width+j) < threshold)
-                        bufferedImage.setRGB(i, j, COLOR_LIST[2]);// col = COLOR List elements
+                        bufferedImage.setRGB(i, j, COLOR_LIST[7]);// col = COLOR List elements
                     else
-                        bufferedImage.setRGB(i, j, COLOR_LIST[3]);// col = COLOR List elements
+                        bufferedImage.setRGB(i, j, COLOR_LIST[8]);// col = COLOR List elements
 
                 }
             }
@@ -72,7 +75,7 @@ public class BMPImageWrite implements BMPImageOperations {
         }catch (Exception e){
             System.out.println("Exceptin catched " + e.toString());
         }
-        File f = new File("f_color4.bmp");
+        File f = new File(this.outputImagePath);
         ImageIO.write(bufferedImage, "BMP", f);
 
         return null;
