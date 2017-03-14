@@ -42,10 +42,7 @@ public class KMeans {
                 this.clusterList.get(i).resetClusterPoints();
             }
         }// infinite loop
-        // noktalar kümelere atandı. küme sayısı = k
-        // küme merkezleri hesaplanacak ve eksileri ile karşılaştırılacak.
-        // her seferinde eğer eski küme merkezleri yenilerine eşit değilse
-        // clusterda olan pointleri sıfırla.
+
 
     }// calculate
 

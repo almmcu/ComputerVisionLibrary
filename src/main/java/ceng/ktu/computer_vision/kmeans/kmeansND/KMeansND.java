@@ -1,4 +1,4 @@
-package ceng.ktu.computer_vision.kmeans.kmeans3d;
+package ceng.ktu.computer_vision.kmeans.kmeansND;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +10,18 @@ import java.util.List;
  * @version 1.0
  * @since 08.03.2017.
  */
-public class KMeans3D {
+public class KMeansND {
     private int k;
-    private List<Point3D> points;
-    private List<Cluster3D> clusters;
+    private List<PointND> points;
+    private List<ClusterND> clusters;
 
-    public KMeans3D(List<Point3D> points, int k) {
+    public KMeansND(List<PointND> points, int k) {
         this.k = k;
-        this.clusters = new ArrayList<Cluster3D>();
+        this.clusters = new ArrayList<ClusterND>();
         this.points = points;
     }
 
-    public List<Cluster3D> getClusters() {
+    public List<ClusterND> getClusters() {
         return clusters;
     }
 
@@ -35,7 +35,7 @@ public class KMeans3D {
             //Clear cluster state
             clearClusters();
 
-            List<Point3D> lastClusterCenters = getClusterCenters();
+            List<PointND> lastClusterCenters = getClusterCenters();
 
             //Assign points to the closer cluster
             assignCluster();
@@ -45,12 +45,12 @@ public class KMeans3D {
 
             iteration++;
 
-            List<Point3D> currentClusterCenters = getClusterCenters();
+            List<PointND> currentClusterCenters = getClusterCenters();
 
             //Calculates total distance between new and old Centroids
             double distance = 0;
             for(int i = 0; i < lastClusterCenters.size(); i++) {
-                distance += Point3D.getDistance(lastClusterCenters.get(i),currentClusterCenters.get(i));
+                distance += PointND.getDistance(lastClusterCenters.get(i),currentClusterCenters.get(i));
             }
             System.out.println("************************");
             System.out.println("Döngü: " + iteration);
@@ -67,27 +67,27 @@ public class KMeans3D {
     // Add them to list
     private void init(){
         for (int i = 0; i < k; i++) {
-            Cluster3D cluster = new Cluster3D(i);
+            ClusterND cluster = new ClusterND(i);
             clusters.add(cluster);
         }
     }
 
     private void clearClusters() {
-        for(Cluster3D cluster : clusters) {
+        for(ClusterND cluster : clusters) {
             cluster.resetClusterPoints();
         }
     }
 
-    private List<Point3D> getClusterCenters() {
-        List<Point3D> clusterCenters = new ArrayList(k);
-        for(Cluster3D cluster : this.clusters) {
+    private List<PointND> getClusterCenters() {
+        List<PointND> clusterCenters = new ArrayList(k);
+        for(ClusterND cluster : this.clusters) {
             clusterCenters.add(cluster.getClusterCenter());
         }
         return clusterCenters;
     }
 
     private void calculateClusterCenters() {
-        for(Cluster3D cluster : this.clusters) {
+        for(ClusterND cluster : this.clusters) {
             cluster.calculateClusterCenter();
         }
     }
@@ -98,11 +98,11 @@ public class KMeans3D {
         int clusterId = 0;
         double distance = 0.0;
 
-        for(Point3D point : points) {
+        for(PointND point : points) {
             min = max;
             for(int i = 0; i < k; i++) {
-                Cluster3D cluster = clusters.get(i);
-                distance = Point3D.getDistance(point, cluster.getClusterCenter());
+                ClusterND cluster = clusters.get(i);
+                distance = PointND.getDistance(point, cluster.getClusterCenter());
                 if(distance < min){
                     min = distance;
                     clusterId = i;
