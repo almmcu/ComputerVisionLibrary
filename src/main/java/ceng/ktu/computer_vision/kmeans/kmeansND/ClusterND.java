@@ -39,15 +39,21 @@ public class ClusterND {
     protected void addPointToList (PointND point){
         this.clusterPoints.add(point);
     }
+
+   // güncellendi
     protected void calculateClusterCenter (){
-        int sumR = 0, sumG = 0, sumB = 0;
         int size = this.clusterPoints.size();
+        int [] meanList = new int[PointND.getDimension()];
+        PointND clusterCenter = new PointND(PointND.getDimension());
         for (int i = 0; i < size; i++){
-            sumR += this.clusterPoints.get(i).getR();
-            sumG += this.clusterPoints.get(i).getG();
-            sumB += this.clusterPoints.get(i).getB();
+            for (int j = 0; j < PointND.getDimension(); j++) {
+                meanList[j] += this.clusterPoints.get(i).getPointList()[j];
+            }
         }
-        this.clusterCenter = new PointND(sumR / size, sumG / size, sumB / size);
+        for (int i = 0; i < PointND.getDimension(); i++) {
+            clusterCenter.getPointList()[i] = meanList[i] / size;
+        }
+        this.clusterCenter = clusterCenter;
     }
     protected void resetClusterPoints (){
         this.clusterPoints.clear();

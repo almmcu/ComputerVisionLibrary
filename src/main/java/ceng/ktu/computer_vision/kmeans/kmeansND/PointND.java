@@ -29,6 +29,10 @@ public class PointND {
         return pointList;
     }
 
+    public static int getDimension() {
+        return dimension;
+    }
+
     public int getX() {
         return x;
     }
